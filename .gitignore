@@ -241,3 +241,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /LandRegistryParser/src.pdf
+/ConsoleRunner/src.pdf
