@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using LandRegistryParser.Models;
 
 namespace LandRegistryParser
 {
@@ -25,23 +26,39 @@ namespace LandRegistryParser
             }
         }
 
-        public static IEnumerable<T[]> Buffer<T,U,V>(this IEnumerable<T> sourceStream, IEnumerable<U> delimeterStream, 
-            Func<T,V> sourceMapper, Func<U,V> delimeterMapper) where V : IComparable<V>
+        public static List<List<T1>> Buffer<T1, T2, T3>(this IEnumerable<T1> sourceStream, List<T2> delimeterStream, 
+            Func<T1, T3> mapper, Func<T2, T3> mapperDel ) where T3 : IComparable<T3>
         {
-            var dels = delimeterStream.Zip(delimeterStream.Skip(1), (d1, d2) => new { From = d1, Till = d2, IsLast = false });
+            var result = new List<List<T1>>();
+            
+            var i = 0;
+            var current = new List<T1>();
+            var includeTheRest = false;
+            foreach (var src in sourceStream)
+            {
+                var val = mapper(src);
+                if (val.CompareTo(mapperDel(delimeterStream[i])) < 0 || includeTheRest)
+                {
+                    current.Add(src);
+                }
+                else
+                {
+                    result.Add(current);
+                    current = new List<T1> {src};
+                    if (i == delimeterStream.Count - 1)
+                    {
+                        includeTheRest = true;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+            if(includeTheRest)
+                result.Add(current);
 
-            var before = Enumerable.Repeat(sourceStream
-                .Where(s => sourceMapper(s).CompareTo(delimeterMapper(dels.First().From)) < 0)
-                .ToArray(), 1);
-
-            var within = dels.Select(d => sourceStream.Where(s => sourceMapper(s).CompareTo(delimeterMapper(d.From)) >= 0 
-                                                                && sourceMapper(s).CompareTo(delimeterMapper(d.Till)) < 0).ToArray());
-
-            var after = Enumerable.Repeat(sourceStream
-                .Where(s => sourceMapper(s).CompareTo(delimeterMapper(dels.Last().Till)) >= 0)
-                .ToArray(), 1);
-
-            return before.Union(within).Union(after);
+            return result;
         }
     }
 }

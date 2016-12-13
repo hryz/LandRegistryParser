@@ -11,7 +11,7 @@ namespace ConsoleRunner
         static void Main(string[] args)
         {
             var model = Converter.Convert("..\\..\\src.pdf");
-            var result = Parser.Parse(model, KeyOffset, ValueOffset, DelimeterOffset);
+            var result = FuncParser.Parse(model, KeyOffset, ValueOffset, DelimeterOffset);
         }
     }
 }

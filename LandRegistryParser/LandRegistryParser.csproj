@@ -53,8 +53,8 @@
     <Compile Include="Converter.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Models\PdfModel.cs" />
+    <Compile Include="FuncParser .cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
