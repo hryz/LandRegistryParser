@@ -40,6 +40,7 @@ namespace LandRegistryParser
 
             foreach (var owner in owners)
             {
+                //combine multiline keys
                 var keys = owner.Where(s => s.Rect.X == keyOffset);
                 var upperKeys = keys.Where(s => s.Text.StartsWithUpper()).ToList();
                 
@@ -51,31 +52,29 @@ namespace LandRegistryParser
                         Rect = s.First().Rect
                     }).ToList();
 
-                var values = owner.Where(s => s.Rect.X == valueOffset)
-                    .Select(s => new
-                    {
-                        Value = s,
-                        Key = compositeKeys.FirstOrDefault(k => AlmostEqual(k.Rect.Y, s.Rect.Y))
-                    });
-                var upperValues = values.Where(s => s.Key != null).ToList();
+                //combine multiline values
+                var values = owner.Where(s => s.Rect.X == valueOffset);
+                var upperValues = values.Where(s => compositeKeys.Any(k => k.Rect.Y.IsAlmostEqualTo(s.Rect.Y))).ToList();
 
-                var vals = values.Buffer(upperValues, s => s.Value.Rect.Y, d => d.Value.Rect.Y)
+                var vals = values.Buffer(upperValues, s => s.Rect.Y, d => d.Rect.Y)
                     .Where(s => s.Any())
-                    .Select(s => new KeyValuePair<string, string>(
-                        s.First().Key.Text, 
-                        String.Join(" ", s.Select(x => x.Value.Text))))
+                    .Select(s => new Line
+                    { 
+                        Text = String.Join(" ", s.Select(x => x.Text)),
+                        Rect = s.First().Rect
+                    })
                     .ToList();
 
-
-                //yield return vals;
+                //match keys and values
+                yield return compositeKeys
+                    .Select(k => new KeyValuePair<string,string>(
+                        k.Text, 
+                        vals.FirstOrDefault(v => v.Rect.Y.IsAlmostEqualTo(k.Rect.Y))?.Text))
+                    .ToList();
 
             }
-            throw new Exception();
         }
 
-        private static bool AlmostEqual(decimal a, decimal b, decimal maxDifference = 10M)
-        {
-            return Math.Abs(a - b) < maxDifference;
-        }
+        
     }
 }

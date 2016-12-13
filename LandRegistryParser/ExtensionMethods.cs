@@ -60,5 +60,10 @@ namespace LandRegistryParser
 
             return result;
         }
+
+        public static bool IsAlmostEqualTo(this decimal a, decimal b, decimal maxDifference = 10M)
+        {
+            return Math.Abs(a - b) < maxDifference;
+        }
     }
 }
