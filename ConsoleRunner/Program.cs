@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LandRegistryParser;
@@ -15,10 +16,16 @@ namespace ConsoleRunner
 
         static void Main(string[] args)
         {
-            var model = Converter.Convert("..\\..\\src.pdf");
+            if (args.Length != 2)
+            {
+                Console.WriteLine("Please pass 2 arguments: the source PDF file, and the result JSON file");
+                Console.ReadLine();
+                return;
+            }
+            var model = Converter.Convert(args[0]);
             var result = FuncParser.Parse(model, KeyOffset, ValueOffset, DelimeterOffset).Skip(1); //skip report indo
             var models = ModelConverter.ConvertDictionaryToModels(result);
-            File.WriteAllText("..\\..\\owners.json", JsonConvert.SerializeObject(models, Formatting.Indented));
+            File.WriteAllText(args[1], JsonConvert.SerializeObject(models, Formatting.Indented));
         }
     }
 }

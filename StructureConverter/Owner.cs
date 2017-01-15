@@ -2,22 +2,27 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace StructureConverter
 {
     public class Owner
     {
+        [IgnoreDataMember]
         public string RealtyObjectRegNo { get; set; }
         public string RealtyObjectDescription { get; set; }
         public string Area { get; set; }
         public string Address { get; set; }
+        [IgnoreDataMember]
         public string OwnershipRecordRegNo { get; set; }
+        [IgnoreDataMember]
         public string RegistrationDate { get; set; }
         public string Registrar { get; set; }
         public string OwnershipCause { get; set; }
         public string RegistrationCause { get; set; }
         public string OwnershipType { get; set; }
+        [IgnoreDataMember]
         public string OwnershipPart { get; set; }
         public string OwnerName { get; set; }
 
@@ -46,11 +51,11 @@ namespace StructureConverter
             LivingArea = Decimal.TryParse(reg.Groups[3].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out livingArea) 
                 ? livingArea 
                 : 0;
-            var reg2 = Regex.Match(Address, @"(приміщення|квартира) ([0-9]*)");
+            var reg2 = Regex.Match(Address, @"(приміщення|квартира) ([0-9\.]*)");
             IsApartment = reg2.Groups[1].Value == "квартира";
             IsOffice = reg2.Groups[1].Value == "приміщення";
-            int room, numerator, denominator;
-            RoomNo = Int32.TryParse(reg2.Groups[2].Value, out room) ? room : 0;
+            int numerator, denominator;
+            RoomNo = reg2.Groups[2].Value;
             DateTime regDate;
             RegistrationDateTime = DateTime.TryParseExact(RegistrationDate, "dd.MM.yyyy HH:mm:ss",
                 CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out regDate)
@@ -72,7 +77,7 @@ namespace StructureConverter
         public decimal LivingArea { get; set; }
         public bool IsApartment { get; set; }
         public bool IsOffice { get; set; }
-        public int RoomNo { get; set; }
+        public string RoomNo { get; set; }
         public DateTime RegistrationDateTime { get; set; }
         public decimal Part { get; set; }
     }

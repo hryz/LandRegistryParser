@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using ClosedXML.Excel;
 using LandRegistryParser;
 using Microsoft.Win32;
+using Novacode;
 using StructureConverter;
 
 namespace MainUi
@@ -42,13 +46,32 @@ namespace MainUi
             Column14CheckBox.Content = "Житлова площа";
             Column15CheckBox.Content = "Тип приміщення";
             Column16CheckBox.Content = "Номер приміщення";
+            //============================================================================
+            Legend.Text = 
+@"Доступні поля для підстановки:
+$RealtyObjectRegNo - Реєстраційний номер об’єкта нерухомого майна
+$RealtyObjectDescription - Об’єкт нерухомого майна
+$Area - Площа
+$Address - Адреса
+$OwnershipRecordRegNo - Номер запису про право власності
+$RegistrationDate - Дата, час державної реєстрації
+$Registrar - Державний реєстратор
+$OwnershipCause - Підстава виникнення права власності
+$RegistrationCause - Підстава внесення запису
+$OwnershipType - Форма власності
+$OwnershipPart - Розмір частки
+$OwnerName - Власники
+$TotalArea - Загальна площа
+$LivingArea - Житлова площа
+$RoomNo - Номер приміщення
+$RoomType - Тип приміщення";
         }
 
         private void SelectSourceFileButton_Click(object sender, RoutedEventArgs e)
         {
             var pdfDialog = new OpenFileDialog
             {
-                Filter = "PDF File|*.pdf",
+                Filter = "PDF документ|*.pdf",
                 Multiselect = false
             };
             if (pdfDialog.ShowDialog()?? false)
@@ -61,7 +84,7 @@ namespace MainUi
             {
                 DefaultExt = "xlsx",
                 AddExtension = true,
-                Filter = "Excel workbook|*.xlsx"
+                Filter = "Excel документ|*.xlsx"
             };
             if (xlsDialog.ShowDialog()?? false)
             {
@@ -73,7 +96,7 @@ namespace MainUi
         {
             var templateDialog = new OpenFileDialog
             {
-                Filter = "Word document|*.docx",
+                Filter = "Word документ|*.docx",
                 Multiselect = false
             };
             if (templateDialog.ShowDialog()?? false)
@@ -85,7 +108,7 @@ namespace MainUi
             if (String.IsNullOrEmpty(SourceFileTextBox.Text)
                 || String.IsNullOrEmpty(OutputFileNameTextBox.Text))
             {
-                MessageBox.Show("Please set the source and destination files");
+                MessageBox.Show("Будь ласка оберіть файл витягу а шлях для збереження");
                 return;
             }
 
@@ -94,7 +117,7 @@ namespace MainUi
             var records = ModelConverter.ConvertDictionaryToModels(result);
 
             var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Registry");
+            var ws = wb.Worksheets.Add("Власники");
             RenderHeader(ws);
             for (int i = 0; i < records.Count; i++)
             {
@@ -102,7 +125,7 @@ namespace MainUi
             }
             ws.Columns().AdjustToContents();
             wb.SaveAs(OutputFileNameTextBox.Text);
-            MessageBox.Show("Done!");
+            MessageBox.Show("Виконано");
         }
 
         private void RenderHeader(IXLWorksheet ws)
@@ -274,6 +297,63 @@ namespace MainUi
             {
                 ws.Row(rowIndex).Cell(i).Value = owner.RoomNo;
                 i++;
+            }
+        }
+
+        private void ProcessButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrEmpty(TemplateFileTextBox.Text)
+                || String.IsNullOrEmpty(OutputFolderTextBox.Text))
+            {
+                MessageBox.Show("Будь ласка оберіть файл шаблону та папку для збереження результатів");
+                return;
+            }
+
+            var model = Converter.Convert(SourceFileTextBox.Text);
+            var result = FuncParser.Parse(model, KeyOffset, ValueOffset, DelimeterOffset).Skip(1); //skip report indo
+            var records = ModelConverter.ConvertDictionaryToModels(result);
+
+            var outPath = Path.GetDirectoryName(SourceFileTextBox.Text) + "\\" + OutputFolderTextBox.Text;
+            if (!Directory.Exists(outPath))
+                Directory.CreateDirectory(outPath);
+            
+            using (var ioStream = new FileStream(TemplateFileTextBox.Text, FileMode.Open, FileAccess.Read))
+            using (var origTemplate = new MemoryStream())
+            {
+                ioStream.CopyTo(origTemplate);
+                origTemplate.Seek(0, SeekOrigin.Begin);
+
+                foreach (var rec in records)
+                {
+                    using (var templateCopy = new MemoryStream())
+                    {
+                        origTemplate.CopyTo(templateCopy);
+                        origTemplate.Seek(0, SeekOrigin.Begin);
+                        //---------------------------------------------
+                        using (var document = DocX.Load(templateCopy))
+                        {
+                            document.ReplaceText("$RealtyObjectRegNo", rec.RealtyObjectRegNo, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$RealtyObjectDescription", rec.RealtyObjectDescription, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$Area", rec.Area, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$Address", rec.Address, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$OwnershipRecordRegNo", rec.OwnershipRecordRegNo, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$RegistrationDate", rec.RegistrationDate, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$Registrar", rec.Registrar, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$OwnershipCause", rec.OwnershipCause, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$RegistrationCause", rec.RegistrationCause, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$OwnershipType", rec.OwnershipType, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$OwnershipPart", rec.OwnershipPart, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$OwnerName", rec.OwnerName, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$TotalArea", rec.TotalArea.ToString(CultureInfo.InvariantCulture), false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$LivingArea", rec.LivingArea.ToString(CultureInfo.InvariantCulture), false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$RoomNo", rec.RoomNo.ToString(CultureInfo.InvariantCulture), false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$RoomType", rec.IsApartment ? "квартира" : rec.IsOffice ? "приміщення" : "?", false, RegexOptions.IgnoreCase);
+
+                            document.SaveAs($@"{outPath}\{(rec.IsApartment ? "кв" : "пр")}{rec.RoomNo}-{rec.OwnerName}.docx");
+                        }
+                    }
+                }
+                MessageBox.Show("Виконано");
             }
         }
     }
