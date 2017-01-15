@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandRegistryParser", "LandR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRunner", "ConsoleRunner\ConsoleRunner.csproj", "{7258C8EB-A40F-41EE-86BA-837E19FA6569}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainUi", "MainUi\MainUi.csproj", "{9E5EC21E-F24D-48C4-AE1A-88B303D0D042}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7258C8EB-A40F-41EE-86BA-837E19FA6569}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7258C8EB-A40F-41EE-86BA-837E19FA6569}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7258C8EB-A40F-41EE-86BA-837E19FA6569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E5EC21E-F24D-48C4-AE1A-88B303D0D042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E5EC21E-F24D-48C4-AE1A-88B303D0D042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E5EC21E-F24D-48C4-AE1A-88B303D0D042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E5EC21E-F24D-48C4-AE1A-88B303D0D042}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
