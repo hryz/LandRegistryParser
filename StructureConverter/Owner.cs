@@ -30,7 +30,7 @@ namespace StructureConverter
         {
             RealtyObjectRegNo = dict.FirstOrDefault(x => x.Key == "Реєстраційний номер об’єкта нерухомого майна").Value ?? String.Empty;
             RealtyObjectDescription = dict.FirstOrDefault(x => x.Key == "Об’єкт нерухомого майна").Value ?? String.Empty;
-            Area = dict.FirstOrDefault(x => x.Key == "Площа").Value ?? String.Empty;
+            Area = dict.FirstOrDefault(x => x.Key == "Опис об’єкта").Value ?? String.Empty;
             Address = dict.FirstOrDefault(x => x.Key == "Адреса").Value ?? String.Empty;
             OwnershipRecordRegNo = dict.FirstOrDefault(x => x.Key == "Номер запису про право власності").Value ?? String.Empty;
             RegistrationDate = dict.FirstOrDefault(x => x.Key == "Дата, час державної реєстрації").Value ?? String.Empty;
@@ -43,7 +43,7 @@ namespace StructureConverter
             //=========================================================================================================
             OwnershipRecordRegNoInt = Int64.Parse(OwnershipRecordRegNo);
             RealtyObjectRegNoInt = Int64.Parse(RealtyObjectRegNo);
-            var reg = Regex.Match(Area, @"Загальна площа \(кв\.м\): ([0-9\.]*)(, житлова площа \(кв\.м\): ([0-9\.]*))?");
+            var reg = Regex.Match(Area, @"Загальна площа \(кв\.м\): ([0-9\.]*)(, житлова площа \(кв\.м\): ([0-9\.]*))?.*");
             decimal totalArea, livingArea;
             TotalArea = Decimal.TryParse(reg.Groups[1].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out totalArea) 
                 ? totalArea 
