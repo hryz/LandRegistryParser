@@ -41,10 +41,6 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Label x:Name="Label2" Content="Зберігти як:" Grid.Row="0" Grid.Column="0"/>
                     <TextBox x:Name="OutputFileNameTextBox" TextWrapping="Wrap" Grid.Column="1" Grid.Row="0" Margin="3"/>
@@ -55,17 +51,13 @@
                     <CheckBox x:Name="Column3CheckBox" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
                     <CheckBox x:Name="Column4CheckBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
                     <CheckBox x:Name="Column5CheckBox" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column6CheckBox" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column7CheckBox" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column8CheckBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column9CheckBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column10CheckBox" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column11CheckBox" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column12CheckBox" Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column13CheckBox" Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column14CheckBox" Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column15CheckBox" Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
-                    <CheckBox x:Name="Column16CheckBox" Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
+                    <CheckBox x:Name="Column10CheckBox" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
+                    <CheckBox x:Name="Column11CheckBox" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
+                    <CheckBox x:Name="Column12CheckBox" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
+                    <CheckBox x:Name="Column13CheckBox" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
+                    <CheckBox x:Name="Column14CheckBox" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
+                    <CheckBox x:Name="Column15CheckBox" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
+                    <CheckBox x:Name="Column16CheckBox" Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="3"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Генерація документів по шаблону">
