@@ -18,14 +18,6 @@ namespace LandRegistryParser
             return s.Substring(0, 1) == s.Substring(0, 1).ToLower(CultureInfo.InvariantCulture);
         }
 
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
-        {
-            foreach (var elem in enumerable)
-            {
-                action.Invoke(elem);
-            }
-        }
-
         public static List<List<T1>> Buffer<T1, T2, T3>(this IEnumerable<T1> sourceStream, List<T2> delimeterStream, 
             Func<T1, T3> mapper, Func<T2, T3> mapperDel ) where T3 : IComparable<T3>
         {

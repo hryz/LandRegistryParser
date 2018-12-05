@@ -34,10 +34,6 @@ namespace MainUi
             Column3CheckBox.Content = "Площа";
             Column4CheckBox.Content = "Адреса";
             Column5CheckBox.Content = "Номер запису про право власності";
-            Column6CheckBox.Content = "Дата, час державної реєстрації";
-            Column7CheckBox.Content = "Державний реєстратор";
-            Column8CheckBox.Content = "Підстава виникнення права власності";
-            Column9CheckBox.Content = "Підстава внесення запису";
             Column10CheckBox.Content = "Форма власності";
             Column11CheckBox.Content = "Розмір частки";
             Column12CheckBox.Content = "Власники";
@@ -49,15 +45,11 @@ namespace MainUi
             //============================================================================
             Legend.Text = 
 @"Доступні поля для підстановки:
-$RealtyObjectRegNo - Реєстраційний номер об’єкта нерухомого майна
+$RealtyObjectNo - Реєстраційний номер об’єкта нерухомого майна
 $RealtyObjectDescription - Об’єкт нерухомого майна
 $Area - Площа
 $Address - Адреса
 $OwnershipRecordRegNo - Номер запису про право власності
-$RegistrationDate - Дата, час державної реєстрації
-$Registrar - Державний реєстратор
-$OwnershipCause - Підстава виникнення права власності
-$RegistrationCause - Підстава внесення запису
 $OwnershipType - Форма власності
 $OwnershipPart - Розмір частки
 $OwnerName - Власники
@@ -157,26 +149,6 @@ $RoomType - Тип приміщення";
                 ws.Row(1).Cell(i).Value = "Номер запису про право власності";
                 i++;
             }
-            if (Column6CheckBox.IsChecked ?? false)
-            {
-                ws.Row(1).Cell(i).Value = "Дата, час державної реєстрації";
-                i++;
-            }
-            if (Column7CheckBox.IsChecked ?? false)
-            {
-                ws.Row(1).Cell(i).Value = "Державний реєстратор";
-                i++;
-            }
-            if (Column8CheckBox.IsChecked ?? false)
-            {
-                ws.Row(1).Cell(i).Value = "Підстава виникнення права власності";
-                i++;
-            }
-            if (Column9CheckBox.IsChecked ?? false)
-            {
-                ws.Row(1).Cell(i).Value = "Підстава внесення запису";
-                i++;
-            }
             if (Column10CheckBox.IsChecked ?? false)
             {
                 ws.Row(1).Cell(i).Value = "Форма власності";
@@ -220,7 +192,7 @@ $RoomType - Тип приміщення";
             var i = 2;
             if (Column1CheckBox.IsChecked ?? false)
             {
-                ws.Row(rowIndex).Cell(i).Value = owner.RealtyObjectRegNoInt;
+                ws.Row(rowIndex).Cell(i).Value = owner.RealtyObjectNo.ToString();
                 i++;
             }
             if (Column2CheckBox.IsChecked ?? false)
@@ -240,27 +212,7 @@ $RoomType - Тип приміщення";
             }
             if (Column5CheckBox.IsChecked ?? false)
             {
-                ws.Row(rowIndex).Cell(i).Value = owner.OwnershipRecordRegNoInt;
-                i++;
-            }
-            if (Column6CheckBox.IsChecked ?? false)
-            {
-                ws.Row(rowIndex).Cell(i).Value = owner.RegistrationDateTime;
-                i++;
-            }
-            if (Column7CheckBox.IsChecked ?? false)
-            {
-                ws.Row(rowIndex).Cell(i).Value = owner.Registrar;
-                i++;
-            }
-            if (Column8CheckBox.IsChecked ?? false)
-            {
-                ws.Row(rowIndex).Cell(i).Value = owner.OwnershipCause;
-                i++;
-            }
-            if (Column9CheckBox.IsChecked ?? false)
-            {
-                ws.Row(rowIndex).Cell(i).Value = owner.RegistrationCause;
+                ws.Row(rowIndex).Cell(i).Value = owner.OwnershipRecordNo.ToString();
                 i++;
             }
             if (Column10CheckBox.IsChecked ?? false)
@@ -332,17 +284,11 @@ $RoomType - Тип приміщення";
                         //---------------------------------------------
                         using (var document = DocX.Load(templateCopy))
                         {
-                            document.ReplaceText("$RealtyObjectRegNo", rec.RealtyObjectRegNo, false, RegexOptions.IgnoreCase);
                             document.ReplaceText("$RealtyObjectDescription", rec.RealtyObjectDescription, false, RegexOptions.IgnoreCase);
                             document.ReplaceText("$Area", rec.Area, false, RegexOptions.IgnoreCase);
                             document.ReplaceText("$Address", rec.Address, false, RegexOptions.IgnoreCase);
-                            document.ReplaceText("$OwnershipRecordRegNo", rec.OwnershipRecordRegNo, false, RegexOptions.IgnoreCase);
-                            document.ReplaceText("$RegistrationDate", rec.RegistrationDate, false, RegexOptions.IgnoreCase);
-                            document.ReplaceText("$Registrar", rec.Registrar, false, RegexOptions.IgnoreCase);
-                            document.ReplaceText("$OwnershipCause", rec.OwnershipCause, false, RegexOptions.IgnoreCase);
-                            document.ReplaceText("$RegistrationCause", rec.RegistrationCause, false, RegexOptions.IgnoreCase);
                             document.ReplaceText("$OwnershipType", rec.OwnershipType, false, RegexOptions.IgnoreCase);
-                            document.ReplaceText("$OwnershipPart", rec.OwnershipPart, false, RegexOptions.IgnoreCase);
+                            document.ReplaceText("$OwnershipPart", rec.Part.ToString(CultureInfo.InvariantCulture), false, RegexOptions.IgnoreCase);
                             document.ReplaceText("$OwnerName", rec.OwnerName, false, RegexOptions.IgnoreCase);
                             document.ReplaceText("$TotalArea", rec.TotalArea.ToString(CultureInfo.InvariantCulture), false, RegexOptions.IgnoreCase);
                             document.ReplaceText("$LivingArea", rec.LivingArea.ToString(CultureInfo.InvariantCulture), false, RegexOptions.IgnoreCase);
