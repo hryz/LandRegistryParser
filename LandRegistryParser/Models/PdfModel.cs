@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -127,7 +128,7 @@ namespace LandRegistryParser.Models
         public Rectangle(string src)
         {
             var numbers = src.Split(',')
-                .Select(Decimal.Parse)
+                .Select(s => decimal.Parse(s, CultureInfo.InvariantCulture))
                 .ToArray();
 
             X = numbers[0];
